@@ -134,7 +134,9 @@ echo "Removing existing access restriction rules from $WebAppName..."
 for i in $(seq 1 $total_groups); do
     rule_name="ipXC$i"
     echo "Removing rule: $rule_name"
-    az webapp config access-restriction remove --resource-group "$ResourceGroupName" --name "$WebAppName" --rule-name "$rule_name" &>/dev/null
+    az webapp config access-restriction remove --resource-group "$ResourceGroupName" \
+                                                --name "$WebAppName" \
+                                                --rule-name "$rule_name" &>/dev/null
 done
 
 echo "Adding new access restriction rules to $WebAppName..."
