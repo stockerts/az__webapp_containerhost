@@ -36,7 +36,7 @@ WebAppName="<webappname>-app" # Update with desired Web App name, which will als
 AppServicePlanName="<appserviceplanname>-asp" # Update with desired App Service Plan name
 Location="centralus" # Update with desired Location (az account list-locations -o table)
 Sku="F1" # Update with desired SKU "F1, B1, B2"
-ContainerImage="index.docker.io/<username/imsage:tag>" # Update with desired Container URL/Image:Tag
+ContainerImage="index.docker.io/<username/image:tag>" # Update with desired Container URL/Image:Tag
 Tags=("owner=<name>" "email=<email>") # Update with Name and Email
 
 # Setting desired Azure Subscription
