@@ -71,12 +71,23 @@ echo "WebApp $WebAppName has been created."
 
 ---
 
-### 3. Verify Resource Creation
+### 3. Verify WebApp Creation
 After running the script, verify the resources:
 - In the Azure Portal, navigate to **Resource Groups** to check your newly created resource group.
-- Check **App Services** for the web app.
+- Select the created **App Services** for the web app.
+- within **Overview** click on the listed **Default domain**.
 
-### 4. Update Azure Web Application Network Restriction for F5 Distributed Cloud
+**_NOTE:_** This might take up to 5 mins, while the service becomes available for the first time.
+
+### 4. Update Variables and Run the Script for 
+1. Copy the code block below.
+2. Paste code into a application without reformating.
+3. Update the variables (e.g., Subscription, ResourceGroupName, etc.) with your desired values.
+4. Copy update code.
+5. Paste it into the Cloud Shell.
+7. Press **Enter** to execute the script.
+
+### Code - Update Azure Web Application Network Restriction for F5 Distributed Cloud
 
 ```bash
 # Define variables for resource group name and web app name
@@ -162,6 +173,16 @@ rm -f "$temp_file"
 echo "Restriction rule update for $WebAppName has been completed."
 ```
 **_NOTE:_** Restriction group removal will error if group isn't present. No action is needed.
+
+
+---
+
+### 3. Verify Restriction Creation
+After running the script, verify the resources:
+- In the Azure Portal, navigate to **Resource Groups** to check your newly created resource group.
+- Select the created **App Services** for the web app.
+- Click on **Networking** on the left hand side, under **Settings**
+- Click on **Enabled with access restrictions** for **Public network access**.
 
 ---
 
