@@ -1,45 +1,32 @@
 # Azure CLI Quick Start Guide
 
-This guide will walk you through logging into Azure, updating the Azure CLI, and using Bash to execute commands. It also includes a code block for setting up Azure resources using the Azure CLI and instructions for using the Azure Portal UI.
+This guide will walk you through logging into Azure, updating the Azure CLI, and running Bash commands to set up resources using the Azure CLI Cloud Shell within the Azure Portal.
 
 ## Prerequisites
-- [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) installed.
-- A Bash shell environment.
+- Access to [Azure Portal](https://portal.azure.com/).
+- Basic understanding of Azure resources.
 
 ---
 
 ## Steps
 
-### 1. Log In to Azure
-#### Using Azure CLI
-To log into your Azure account:
-```bash
-az login
-```
-This will open a browser window for authentication. Follow the on-screen instructions to complete the process. If you’re working on a headless environment, use:
-```bash
-az login --use-device-code
-```
+### 1. Open Azure CLI Cloud Shell in the Azure Portal
+1. Log in to [Azure Portal](https://portal.azure.com/).
+2. In the top-right corner of the portal, click on the **Cloud Shell** icon (a `>`_ symbol).
+3. Choose **Bash** as your shell environment if prompted.
+4. The Cloud Shell will open at the bottom of your browser.
 
-#### Using Azure Portal
-1. Go to [Azure Portal](https://portal.azure.com/).
-2. Log in with your Azure account credentials.
-3. Once logged in, navigate to the **Dashboard** to view and manage your resources.
-
-### 2. Update the Azure CLI
-To ensure you’re using the latest version of the Azure CLI:
-```bash
-az upgrade
-```
-Follow any prompts to complete the update.
-
-### 3. Using Bash to Execute Azure Commands
-Bash is commonly used for scripting Azure CLI commands. Use the following example script to set up Azure resources:
+### 2. Update Variables and Run the Script
+1. Copy the code block below.
+2. Paste code into a application without reformating.
+3. Update the variables (e.g., Subscription, ResourceGroupName, etc.) with your desired values.
+4. Copy update code.
+5. Paste it into the Cloud Shell.
+7. Press **Enter** to execute the script.
 
 ---
 
-### Code
-Copy and paste the following code block into your Bash shell to set up an Azure environment:
+### Code - Create or Update an Azure Web Application
 
 ```bash
 # Define variables
@@ -84,60 +71,100 @@ echo "WebApp $WebAppName has been created."
 
 ---
 
-### 4. Setting Up Azure Resources Using the Azure Portal
-1. **Create a Resource Group**:
-   - In the Azure Portal, search for **Resource Groups** in the search bar.
-   - Click **+ Create**.
-   - Fill in the required fields:
-     - **Subscription**: Select your Azure subscription.
-     - **Resource group**: Enter a name for the resource group.
-     - **Region**: Choose a location (e.g., Central US).
-   - Click **Review + Create** and then **Create**.
+### 3. Verify Resource Creation
+After running the script, verify the resources:
+- In the Azure Portal, navigate to **Resource Groups** to check your newly created resource group.
+- Check **App Services** for the web app.
 
-2. **Create an App Service Plan**:
-   - Search for **App Service Plans** in the search bar.
-   - Click **+ Create**.
-   - Fill in the required fields:
-     - **Subscription**: Select your Azure subscription.
-     - **Resource Group**: Select the resource group you just created.
-     - **Name**: Enter a name for the App Service Plan.
-     - **Operating System**: Select **Linux**.
-     - **SKU and Size**: Choose a pricing tier (e.g., F1).
-   - Click **Review + Create** and then **Create**.
+### 4. Update Azure Web Application Network Restriction for F5 Distributed Cloud
 
-3. **Create a Web App**:
-   - Search for **App Services** in the search bar.
-   - Click **+ Create**.
-   - Fill in the required fields:
-     - **Subscription**: Select your Azure subscription.
-     - **Resource Group**: Select the resource group you created.
-     - **Name**: Enter a unique name for the Web App.
-     - **Publish**: Select **Docker Container**.
-     - **Operating System**: Select **Linux**.
-     - **Region**: Choose the same location as the resource group.
-     - **App Service Plan**: Select the App Service Plan you created.
-   - Configure the Docker container settings with your container image.
-   - Click **Review + Create** and then **Create**.
+```bash
+# Define variables for resource group name and web app name
+Subscription="<update>" #Update with Subscription Name or ID
+ResourceGroupName="<resourcegroupname>-rsg" #Update with target Resource Group name
+WebAppName="<webappname>-app" #Update with target Web App name.
 
-### 5. Verify Resource Creation
-Once the resources are created, you can verify them in the Azure Portal or by using the following Azure CLI commands:
+# Define the URL containing the IP ranges
+url="https://docs.cloud.f5.com/docs-v2/downloads/platform/reference/network-cloud-ref/ips-domains.txt"
 
-- List resource groups:
-  ```bash
-  az group list -o table
-  ```
+echo "Fetching data from URL: $url..."
+# Fetch the data from the URL
+data=$(curl -s "$url")
 
-- List web apps:
-  ```bash
-  az webapp list -o table
-  ```
+# Define the start and end markers
+start_marker="### Public IPv4 Subnet Ranges for F5 Regional Edges"
+end_marker="### Public IPv4 Subnet Ranges for F5 Content Distribution Network Services"
+
+echo "Extracting relevant IP ranges..."
+# Extract the relevant section between the markers
+filtered_ranges=$(echo "$data" | awk "/$start_marker/{flag=1; next} /$end_marker/{flag=0} flag" | grep -oE '\b[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/[0-9]+\b' | sort -u)
+
+# Group size for IP ranges
+group_size=6
+group_number=1
+total_groups=0
+
+echo "Grouping IP ranges into batches of $group_size..."
+# Temporary file to store grouped IP ranges
+temp_file=$(mktemp)
+
+# Group IP ranges into batches of 6
+current_group=()
+for ip in $filtered_ranges; do
+    current_group+=("$ip")
+    if [ ${#current_group[@]} -eq $group_size ]; then
+        echo "${current_group[*]}" | tr ' ' ',' >> "$temp_file"
+        current_group=()
+        group_number=$((group_number + 1))
+        total_groups=$((total_groups + 1))
+    fi
+done
+
+# Add the remaining IPs to a group if any
+if [ ${#current_group[@]} -gt 0 ]; then
+    echo "${current_group[*]}" | tr ' ' ',' >> "$temp_file"
+    total_groups=$((total_groups + 1))
+fi
+
+# Setting desired Azure Subscription
+az account set --subscription "$Subscription"
+
+echo "Removing existing access restriction rules from $WebAppName..."
+# Step 1: Remove existing access restriction rules
+for i in $(seq 1 $total_groups); do
+    rule_name="ipXC$i"
+    echo "Removing rule: $rule_name"
+    az webapp config access-restriction remove --resource-group "$ResourceGroupName" --name "$WebAppName" --rule-name "$rule_name" &>/dev/null
+done
+
+echo "Adding new access restriction rules to $WebAppName..."
+# Step 2: Add new access restriction rules
+priority=100
+group_number=1
+while IFS= read -r ip_group; do
+    rule_name="ipXC$group_number"
+    echo "Adding rule: $rule_name with IPs: $ip_group and priority: $priority"
+    az webapp config access-restriction add --resource-group "$ResourceGroupName" \
+                                             --name "$WebAppName" \
+                                             --rule-name "$rule_name" \
+                                             --ip-address "$ip_group" \
+                                             --priority "$priority" \
+                                             --action Allow &>/dev/null
+    priority=$((priority + 1))
+    group_number=$((group_number + 1))
+done < "$temp_file"
+
+# Clean up temporary file
+rm -f "$temp_file"
+
+echo "Restriction rule update for $WebAppName has been completed."
+```
 
 ---
 
 ## Troubleshooting
-- **Azure CLI commands not recognized**: Ensure the Azure CLI is installed and added to your system PATH.
-- **Authentication issues**: Double-check your Azure account credentials.
-- **Permission errors**: Confirm that your Azure account has the necessary permissions to create resources.
+- **Authentication issues**: Ensure you’re logged into Azure in the Cloud Shell.
+- **Permission errors**: Confirm your Azure account has the necessary permissions to create resources.
 
 ---
 
