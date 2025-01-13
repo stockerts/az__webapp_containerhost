@@ -8,7 +8,7 @@ This guide will walk you through logging into Azure, updating the Azure CLI, and
 
 ---
 
-## Steps
+## Steps - Azure Web Application
 
 ### 1. Open Azure CLI Cloud Shell in the Azure Portal
 1. Log in to [Azure Portal](https://portal.azure.com/).
@@ -70,6 +70,8 @@ echo "WebApp $WebAppName has been created."
 ```
 
 ---
+
+## Optional Steps - Azure Network Restriction (Public)
 
 ### 3. Verify WebApp Creation
 After running the script, verify the resources:
