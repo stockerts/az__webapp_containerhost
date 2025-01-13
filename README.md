@@ -75,7 +75,7 @@ echo "WebApp $WebAppName has been created."
 After running the script, verify the resources:
 - In the Azure Portal, navigate to **Resource Groups** to check your newly created resource group.
 - Select the created **App Services** for the web app.
-- within **Overview** click on the listed **Default domain**.
+- within **Overview** click on the listed **Default domain** to browse to the site.
 
 **_NOTE:_** This might take up to 5 mins, while the service becomes available for the first time.
 
