@@ -71,9 +71,9 @@ echo "WebApp $WebAppName has been created."
 
 ---
 
-## Optional Steps - Azure Network Restriction (Public)
 
-### 1. Verify WebApp Creation
+
+### 3. Verify WebApp Creation
 After running the script, verify the resources:
 - In the Azure Portal, navigate to **Resource Groups** to check your newly created resource group.
 - Select the created **App Services** for the web app.
@@ -81,7 +81,9 @@ After running the script, verify the resources:
 
 **_NOTE:_** This might take up to 5 mins, while the service becomes available for the first time.
 
-### 2. Update Variables and Run the Script for 
+## Optional Steps - Azure Network Restriction (Public)
+
+### 1. Update Variables and Run the Script for 
 1. Copy the code block below.
 2. Paste code into a application without reformating.
 3. Update the variables (e.g., Subscription, ResourceGroupName, etc.) with your desired values.
@@ -179,7 +181,7 @@ echo "Restriction rule update for $WebAppName has been completed."
 
 ---
 
-### 3. Verify Restriction Creation
+### 2. Verify Restriction Creation
 After running the script, verify the resources:
 - In the Azure Portal, navigate to **Resource Groups** to check your newly created resource group.
 - Select the created **App Services** for the web app.
