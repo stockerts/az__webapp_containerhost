@@ -161,6 +161,7 @@ rm -f "$temp_file"
 
 echo "Restriction rule update for $WebAppName has been completed."
 ```
+**_NOTE:_** Restriction group removal will error if group isn't present. No action is needed.
 
 ---
 
