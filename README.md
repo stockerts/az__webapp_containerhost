@@ -29,44 +29,183 @@ This guide will walk you through logging into Azure, updating the Azure CLI, and
 ### Code - Create or Update an Azure Web Application
 
 ```bash
-# Define variables
-Subscription="<update>" # Update with Subscription Name or ID
-ResourceGroupName="<resourcegroupname>-rsg" # Update with desired Resource Group name
-WebAppName="<webappname>-app" # Update with desired Web App name, which will also be the subdomain of the app
-AppServicePlanName="<appserviceplanname>-asp" # Update with desired App Service Plan name
-Location="centralus" # Update with desired Location (az account list-locations -o table)
-Sku="F1" # Update with desired SKU "F1, B1, B2"
-ContainerImage="index.docker.io/<username/image:tag>" # Update with desired Container URL/Image:Tag
-Tags=("owner=<name>" "email=<email>") # Update with Name and Email
+#!/bin/bash
 
-# Setting desired Azure Subscription
-az account set --subscription "$Subscription" && \
+# Define color codes
+YELLOW='\033[0;33m'
+RESET='\033[0m'
 
-# Create Resource Group
-az group create --name "$ResourceGroupName" \
-                --location "$Location" \
-                --tags "${Tags[@]}" && \
+while true; do
+    # List available subscriptions
+    echo -e "${YELLOW}Fetching available subscriptions...${RESET}"
+    Subscriptions=$(az account list --query "[].{Name:name, ID:id}" -o tsv)
+    
+    if [[ -z "$Subscriptions" ]]; then
+        echo -e "${YELLOW}No subscriptions found. Please ensure you are logged in to Azure.${RESET}"
+        exit 1
+    fi
 
-echo "Resource Group $ResourceGroupName has been created." && \
+    # Display subscriptions with numbers
+    echo -e "${YELLOW}Available Subscriptions:${RESET}"
+    IFS=$'\n'  # Set IFS to handle multi-line input correctly
+    SubscriptionArray=()
+    i=1
+    for Subscription in $Subscriptions; do
+        Name=$(echo "$Subscription" | cut -f1)
+        ID=$(echo "$Subscription" | cut -f2)
+        echo -e "[$i] ${YELLOW}Name:${RESET} $Name ${YELLOW}ID:${RESET} $ID"
+        SubscriptionArray+=("$ID")
+        ((i++))
+    done
 
-# Create App Service Plan
-az appservice plan create --name "$AppServicePlanName" \
-                          --resource-group "$ResourceGroupName" \
-                          --location "$Location" \
-                          --sku "$Sku" \
-                          --is-linux \
-                          --tags "${Tags[@]}" && \
+    # Prompt user to select a subscription
+    echo ""
+    read -p "$(echo -e ${YELLOW}Enter the number of your desired subscription: ${RESET})" Selection
 
-echo "App Service Plan $AppServicePlanName has been created." && \
+    if [[ "$Selection" =~ ^[0-9]+$ && "$Selection" -ge 1 && "$Selection" -le "${#SubscriptionArray[@]}" ]]; then
+        Subscription="${SubscriptionArray[$((Selection-1))]}"
+        echo -e "${YELLOW}Selected Subscription ID:${RESET} $Subscription"
+    else
+        echo -e "${YELLOW}Invalid selection. Please try again.${RESET}"
+        continue
+    fi
 
-# Create Web App
-az webapp create --resource-group "$ResourceGroupName" \
-                 --plan "$AppServicePlanName" \
-                 --name "$WebAppName" \
-                 --container-image-name "$ContainerImage" \
-                 --tags "${Tags[@]}" && \
+    # Prompt for app name
+    read -p "$(echo -e ${YELLOW}Name your app [e.g., yourname-demoapp]: ${RESET})" AppBaseName
 
-echo "WebApp $WebAppName has been created."
+    # Generate names based on app name
+    ResourceGroupName="${AppBaseName}-rsg"
+    AppServicePlanName="${AppBaseName}-asp"
+    WebAppName="${AppBaseName}-app"
+
+    # Allow users to override default names
+    echo ""
+    echo -e "${YELLOW}Generated Resource Group name:${RESET} $ResourceGroupName"
+    read -p "$(echo -e ${YELLOW}Would you like to use this name? [Y/N]: ${RESET})" ConfirmRsg
+    if [[ "$ConfirmRsg" != "Y" && "$ConfirmRsg" != "y" ]]; then
+        read -p "$(echo -e ${YELLOW}Enter custom Resource Group name: ${RESET})" ResourceGroupName
+    fi
+
+    echo -e "${YELLOW}Generated App Service Plan name:${RESET} $AppServicePlanName"
+    read -p "$(echo -e ${YELLOW}Would you like to use this name? [Y/N]: ${RESET})" ConfirmAsp
+    if [[ "$ConfirmAsp" != "Y" && "$ConfirmAsp" != "y" ]]; then
+        read -p "$(echo -e ${YELLOW}Enter custom App Service Plan name: ${RESET})" AppServicePlanName
+    fi
+
+    echo -e "${YELLOW}Generated Web App name:${RESET} $WebAppName"
+    read -p "$(echo -e ${YELLOW}Would you like to use this name? [Y/N]: ${RESET})" ConfirmWebApp
+    if [[ "$ConfirmWebApp" != "Y" && "$ConfirmWebApp" != "y" ]]; then
+        read -p "$(echo -e ${YELLOW}Enter custom Web App name: ${RESET})" WebAppName
+    fi
+
+    # Display location options
+    echo -e "${YELLOW}Available Locations:${RESET}"
+    LocationOptions=("eastus" "eastus2" "centralus" "westus" "westus2" "Enter your own")
+    for i in "${!LocationOptions[@]}"; do
+        echo -e "[$((i + 1))] ${YELLOW}${LocationOptions[$i]}${RESET}"
+    done
+
+    # Prompt user to select a location
+    echo ""
+    read -p "$(echo -e ${YELLOW}Select a location or enter your own [number]: ${RESET})" LocationSelection
+
+    if [[ "$LocationSelection" =~ ^[0-9]+$ && "$LocationSelection" -ge 1 && "$LocationSelection" -le "${#LocationOptions[@]}" ]]; then
+        if [[ "$LocationSelection" -eq "${#LocationOptions[@]}" ]]; then
+            read -p "$(echo -e ${YELLOW}Enter your custom location: ${RESET})" Location
+        else
+            Location="${LocationOptions[$((LocationSelection - 1))]}"
+        fi
+        echo -e "${YELLOW}Selected Location:${RESET} $Location"
+    else
+        echo -e "${YELLOW}Invalid selection. Please try again.${RESET}"
+        continue
+    fi
+
+    # Display SKU options
+    echo -e "${YELLOW}Available SKUs:${RESET}"
+    SkuOptions=("F1" "B1" "B2" "Enter your own")
+    for i in "${!SkuOptions[@]}"; do
+        echo -e "[$((i + 1))] ${YELLOW}${SkuOptions[$i]}${RESET}"
+    done
+
+    # Prompt user to select a SKU
+    echo ""
+    read -p "$(echo -e ${YELLOW}Select a SKU or enter your own [number]: ${RESET})" SkuSelection
+
+    if [[ "$SkuSelection" =~ ^[0-9]+$ && "$SkuSelection" -ge 1 && "$SkuSelection" -le "${#SkuOptions[@]}" ]]; then
+        if [[ "$SkuSelection" -eq "${#SkuOptions[@]}" ]]; then
+            read -p "$(echo -e ${YELLOW}Enter your custom SKU: ${RESET})" Sku
+        else
+            Sku="${SkuOptions[$((SkuSelection - 1))]}"
+        fi
+        echo -e "${YELLOW}Selected SKU:${RESET} $Sku"
+    else
+        echo -e "${YELLOW}Invalid selection. Please try again.${RESET}"
+        continue
+    fi
+
+    # Prompt for container image
+    read -p "$(echo -e ${YELLOW}Enter Container Image URL [e.g., index.docker.io/username/image:tag]: ${RESET})" ContainerImage
+
+    # Prompt for tags
+    read -p "$(echo -e ${YELLOW}Enter Owner name: ${RESET})" OwnerName
+    OwnerName=${OwnerName:-<name>}  # Default to <name> if empty
+    read -p "$(echo -e ${YELLOW}Enter Email: ${RESET})" Email
+    Email=${Email:-<email>}  # Default to <email> if empty
+    Tags=("owner=$OwnerName" "email=$Email")
+
+    # Display entered values for confirmation
+    echo ""
+    echo -e "${YELLOW}Please confirm the following values:${RESET}"
+    echo -e "${YELLOW}Subscription:${RESET} $Subscription"
+    echo -e "${YELLOW}Resource Group:${RESET} $ResourceGroupName"
+    echo -e "${YELLOW}App Service Plan:${RESET} $AppServicePlanName"
+    echo -e "${YELLOW}Web App:${RESET} $WebAppName"
+    echo -e "${YELLOW}Location:${RESET} $Location"
+    echo -e "${YELLOW}SKU:${RESET} $Sku"
+    echo -e "${YELLOW}Container Image:${RESET} $ContainerImage"
+    echo -e "${YELLOW}Tags:${RESET} ${Tags[@]}"
+    echo ""
+
+    # Ask for confirmation
+    read -p "$(echo -e ${YELLOW}Are these values correct? [Y/N]: ${RESET})" Confirm
+
+    if [[ "$Confirm" == "Y" || "$Confirm" == "y" ]]; then
+        # Setting desired Azure Subscription
+        az account set --subscription "$Subscription" && \
+
+        # Create Resource Group
+        az group create --name "$ResourceGroupName" \
+                        --location "$Location" \
+                        --tags "${Tags[@]}" && \
+
+        echo "Resource Group $ResourceGroupName has been created." && \
+
+        # Create App Service Plan
+        az appservice plan create --name "$AppServicePlanName" \
+                                  --resource-group "$ResourceGroupName" \
+                                  --location "$Location" \
+                                  --sku "$Sku" \
+                                  --is-linux \
+                                  --tags "${Tags[@]}" && \
+
+        echo "App Service Plan $AppServicePlanName has been created." && \
+
+        # Create Web App
+        az webapp create --resource-group "$ResourceGroupName" \
+                         --plan "$AppServicePlanName" \
+                         --name "$WebAppName" \
+                         --container-image-name "$ContainerImage" \
+                         --tags "${Tags[@]}" && \
+
+        echo "WebApp $WebAppName has been created."
+
+        # Exit the loop after successful execution
+        break
+    else
+        echo -e "${YELLOW}Please re-enter the values.${RESET}"
+    fi
+done
 ```
 
 ---
