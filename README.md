@@ -221,96 +221,13 @@ After running the script, verify the resources:
 
 ### 1. Update Variables and Run the Script for 
 1. Copy the code block below.
-2. Paste code into a application without reformating.
-3. Update the variables (e.g., Subscription, ResourceGroupName, etc.) with your desired values.
-4. Copy update code.
-5. Paste it into the Cloud Shell.
-7. Press **Enter** to execute the script.
+2. Paste it into the Cloud Shell.
+3. Press **Enter** to execute the script.
 
 ### Code - Update Azure Web Application Network Restriction for F5 Distributed Cloud
 
 ```bash
-# Define variables for resource group name and web app name
-Subscription="<update>" #Update with Subscription Name or ID
-ResourceGroupName="<resourcegroupname>-rsg" #Update with target Resource Group name
-WebAppName="<webappname>-app" #Update with target Web App name.
-
-# Define the URL containing the IP ranges
-url="https://docs.cloud.f5.com/docs-v2/downloads/platform/reference/network-cloud-ref/ips-domains.txt"
-
-echo "Fetching data from URL: $url..."
-# Fetch the data from the URL
-data=$(curl -s "$url")
-
-# Define the start and end markers
-start_marker="### Public IPv4 Subnet Ranges for F5 Regional Edges"
-end_marker="### Public IPv4 Subnet Ranges for F5 Content Distribution Network Services"
-
-echo "Extracting relevant IP ranges..."
-# Extract the relevant section between the markers
-filtered_ranges=$(echo "$data" | awk "/$start_marker/{flag=1; next} /$end_marker/{flag=0} flag" | grep -oE '\b[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/[0-9]+\b' | sort -u)
-
-# Group size for IP ranges
-group_size=6
-group_number=1
-total_groups=0
-
-echo "Grouping IP ranges into batches of $group_size..."
-# Temporary file to store grouped IP ranges
-temp_file=$(mktemp)
-
-# Group IP ranges into batches of 6
-current_group=()
-for ip in $filtered_ranges; do
-    current_group+=("$ip")
-    if [ ${#current_group[@]} -eq $group_size ]; then
-        echo "${current_group[*]}" | tr ' ' ',' >> "$temp_file"
-        current_group=()
-        group_number=$((group_number + 1))
-        total_groups=$((total_groups + 1))
-    fi
-done
-
-# Add the remaining IPs to a group if any
-if [ ${#current_group[@]} -gt 0 ]; then
-    echo "${current_group[*]}" | tr ' ' ',' >> "$temp_file"
-    total_groups=$((total_groups + 1))
-fi
-
-# Setting desired Azure Subscription
-az account set --subscription "$Subscription"
-
-echo "Removing existing access restriction rules from $WebAppName..."
-# Step 1: Remove existing access restriction rules
-for i in $(seq 1 $total_groups); do
-    rule_name="ipXC$i"
-    echo "Removing rule: $rule_name"
-    az webapp config access-restriction remove --resource-group "$ResourceGroupName" \
-                                                --name "$WebAppName" \
-                                                --rule-name "$rule_name" &>/dev/null
-done
-
-echo "Adding new access restriction rules to $WebAppName..."
-# Step 2: Add new access restriction rules
-priority=100
-group_number=1
-while IFS= read -r ip_group; do
-    rule_name="ipXC$group_number"
-    echo "Adding rule: $rule_name with IPs: $ip_group and priority: $priority"
-    az webapp config access-restriction add --resource-group "$ResourceGroupName" \
-                                             --name "$WebAppName" \
-                                             --rule-name "$rule_name" \
-                                             --ip-address "$ip_group" \
-                                             --priority "$priority" \
-                                             --action Allow &>/dev/null
-    priority=$((priority + 1))
-    group_number=$((group_number + 1))
-done < "$temp_file"
-
-# Clean up temporary file
-rm -f "$temp_file"
-
-echo "Restriction rule update for $WebAppName has been completed."
+Coming soon!
 ```
 **_NOTE:_** Restriction group removal will error if group isn't present. No action is needed.
 
