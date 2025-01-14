@@ -18,11 +18,8 @@ This guide will walk you through logging into Azure, updating the Azure CLI, and
 
 ### 2. Update Variables and Run the Script
 1. Copy the code block below.
-2. Paste code into a application without reformating.
-3. Update the variables (e.g., Subscription, ResourceGroupName, etc.) with your desired values.
-4. Copy update code.
-5. Paste it into the Cloud Shell.
-7. Press **Enter** to execute the script.
+2. Paste it into the Cloud Shell.
+3. Press **Enter** to execute the script.
 
 ---
 
