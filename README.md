@@ -16,7 +16,7 @@ This guide will walk you through logging into Azure, updating the Azure CLI, and
 3. Choose **Bash** as your shell environment if prompted.
 4. The Cloud Shell will open at the bottom of your browser.
 
-### 2. Update Variables and Run the Script
+### 2. Run the Script
 1. Copy the code block below.
 2. Paste it into the Cloud Shell.
 3. Press **Enter** to execute the script.
@@ -349,7 +349,7 @@ After running the script, verify the resources:
 
 ## Optional Steps - Azure Network Restriction (Public)
 
-### 1. Update Variables and Run the Script for 
+### 1. Run the Script 
 1. Copy the code block below.
 2. Paste it into the Cloud Shell.
 3. Press **Enter** to execute the script.
