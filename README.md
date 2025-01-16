@@ -12,7 +12,7 @@ This guide will walk you through logging into Azure, updating the Azure CLI, and
 
 ### 1. Open Azure CLI Cloud Shell in the Azure Portal
 1. Log in to [Azure Portal](https://portal.azure.com/).
-2. In the top-right corner of the portal, click on the **Cloud Shell** icon (a `>`_ symbol).
+2. In the top-right corner of the portal, click on the **Cloud Shell** icon [`>`_] symbol.
 3. Choose **Bash** as your shell environment if prompted.
 4. The Cloud Shell will open at the bottom of your browser.
 
