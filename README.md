@@ -29,20 +29,24 @@ This guide will walk you through logging into Azure, updating the Azure CLI, and
 #!/bin/bash
 
 # Define color codes
-YELLOW='\033[0;33m'
+YELLOW='\033[1;33m'
+GREEN='\033[0;32m'
+RED='\033[0;31m'
 RESET='\033[0m'
 
 while true; do
     # List available subscriptions
-    echo -e "${YELLOW}Fetching available subscriptions...${RESET}"
+    echo -e "Fetching available subscriptions..."
     Subscriptions=$(az account list --query "[].{Name:name, ID:id}" -o tsv)
     
     if [[ -z "$Subscriptions" ]]; then
+        echo ""
         echo -e "${YELLOW}No subscriptions found. Please ensure you are logged in to Azure.${RESET}"
         exit 1
     fi
 
     # Display subscriptions with numbers
+    echo ""
     echo -e "${YELLOW}Available Subscriptions:${RESET}"
     IFS=$'\n'  # Set IFS to handle multi-line input correctly
     SubscriptionArray=()
@@ -67,8 +71,11 @@ while true; do
         continue
     fi
 
+        az account set --subscription "$Subscription" && \
+
     # Prompt for app name
-    read -p "$(echo -e ${YELLOW}Name your app [e.g., yourname-demoapp]: ${RESET})" AppBaseName
+    echo ""
+    read -p "$(echo -e ${YELLOW}Name your app [e.g., yourname-appname]: ${RESET})" AppBaseName
 
     # Generate names based on app name
     ResourceGroupName="${AppBaseName}-rsg"
@@ -77,29 +84,98 @@ while true; do
 
     # Allow users to override default names
     echo ""
+    echo -e "${YELLOW}Generated Web App name:${RESET} $WebAppName"
+    while true; do
+        read -p "$(echo -e ${YELLOW}Would you like to use this name? [Y/N]: ${RESET})" ConfirmWebApp
+        if [[ "$ConfirmWebApp" == "Y" || "$ConfirmWebApp" == "y" ]]; then
+            break
+        elif [[ "$ConfirmWebApp" == "N" || "$ConfirmWebApp" == "n" ]]; then
+            read -p "$(echo -e ${YELLOW}Enter custom Web App name [e.g., yourname-appname-app]: ${RESET})" WebAppName
+            break
+        else
+            echo -e "${RED}Please enter 'Y' or 'N'.${RESET}"
+        fi
+    done
+
+    # Domain check section
+    check_domain_availability() {
+        echo ""
+        echo "Domain Availability check..."
+        Response=$(curl -s -o /dev/null -w "%{http_code}" "$WebAppName.azurewebsites.net")
+
+        if [[ -z "$Response" || ! "$Response" =~ ^[2-5][0-9]{2}$ ]]; then
+            echo -e "${GREEN}The domain $WebAppName.azurewebsites.net appears to be available! ${RESET}"
+            return 0
+        else
+            echo -e "${RED}The domain $WebAppName.azurewebsites.net is not available. HTTP response code: $Response. ${RESET}"
+            return 1
+        fi
+    }
+
+    # Continuously prompt for domain name until available
+    while true; do
+        if check_domain_availability; then
+            break
+        fi
+
+        # Prompt for changing the domain name with input validation
+        while true; do
+            read -p "$(echo -e ${YELLOW}The domain is not available. Would you like to change the name? [Y/N]: ${RESET})" ChangeName
+            if [[ "$ChangeName" == "Y" || "$ChangeName" == "y" ]]; then
+                read -p "$(echo -e ${YELLOW}Enter custom Web App name [e.g., yourname-appname-app]: ${RESET})" WebAppName
+                break
+            elif [[ "$ChangeName" == "N" || "$ChangeName" == "n" ]]; then
+                echo -e "${YELLOW}Proceeding with the current App Name...${RESET}"
+                break
+            else
+                echo -e "${RED}Please enter 'Y' or 'N'.${RESET}"
+            fi
+        done
+    done
+
+
+    # Resource Group Section
+    echo ""
     echo -e "${YELLOW}Generated Resource Group name:${RESET} $ResourceGroupName"
-    read -p "$(echo -e ${YELLOW}Would you like to use this name? [Y/N]: ${RESET})" ConfirmRsg
+
+    # Prompt for confirmation with input validation
+    while true; do
+        read -p "$(echo -e ${YELLOW}Would you like to use this name? [Y/N]: ${RESET})" ConfirmRsg
+        if [[ "$ConfirmRsg" == "Y" || "$ConfirmRsg" == "y" || "$ConfirmRsg" == "N" || "$ConfirmRsg" == "n" ]]; then
+            break
+        else
+            echo -e "${RED}Please enter 'Y' or 'N'.${RESET}"
+        fi
+    done
+
     if [[ "$ConfirmRsg" != "Y" && "$ConfirmRsg" != "y" ]]; then
         read -p "$(echo -e ${YELLOW}Enter custom Resource Group name: ${RESET})" ResourceGroupName
     fi
 
+    # App Service Plan Section
+    echo ""
     echo -e "${YELLOW}Generated App Service Plan name:${RESET} $AppServicePlanName"
-    read -p "$(echo -e ${YELLOW}Would you like to use this name? [Y/N]: ${RESET})" ConfirmAsp
+
+    # Prompt for confirmation with input validation
+    while true; do
+        read -p "$(echo -e ${YELLOW}Would you like to use this name? [Y/N]: ${RESET})" ConfirmAsp
+        if [[ "$ConfirmAsp" == "Y" || "$ConfirmAsp" == "y" || "$ConfirmAsp" == "N" || "$ConfirmAsp" == "n" ]]; then
+            break
+        else
+            echo -e "${RED}Please enter 'Y' or 'N'.${RESET}"
+        fi
+    done
+
     if [[ "$ConfirmAsp" != "Y" && "$ConfirmAsp" != "y" ]]; then
         read -p "$(echo -e ${YELLOW}Enter custom App Service Plan name: ${RESET})" AppServicePlanName
     fi
 
-    echo -e "${YELLOW}Generated Web App name:${RESET} $WebAppName"
-    read -p "$(echo -e ${YELLOW}Would you like to use this name? [Y/N]: ${RESET})" ConfirmWebApp
-    if [[ "$ConfirmWebApp" != "Y" && "$ConfirmWebApp" != "y" ]]; then
-        read -p "$(echo -e ${YELLOW}Enter custom Web App name: ${RESET})" WebAppName
-    fi
-
     # Display location options
+    echo ""
     echo -e "${YELLOW}Available Locations:${RESET}"
-    LocationOptions=("eastus" "eastus2" "centralus" "westus" "westus2" "Enter your own")
+    LocationOptions=("eastus2" "centralus" "westus2" "Enter your own")
     for i in "${!LocationOptions[@]}"; do
-        echo -e "[$((i + 1))] ${YELLOW}${LocationOptions[$i]}${RESET}"
+        echo -e "[$((i + 1))] ${LocationOptions[$i]}"
     done
 
     # Prompt user to select a location
@@ -119,10 +195,11 @@ while true; do
     fi
 
     # Display SKU options
+    echo ""
     echo -e "${YELLOW}Available SKUs:${RESET}"
     SkuOptions=("F1" "B1" "B2" "Enter your own")
     for i in "${!SkuOptions[@]}"; do
-        echo -e "[$((i + 1))] ${YELLOW}${SkuOptions[$i]}${RESET}"
+        echo -e "[$((i + 1))] ${SkuOptions[$i]}"
     done
 
     # Prompt user to select a SKU
@@ -141,15 +218,35 @@ while true; do
         continue
     fi
 
-    # Prompt for container image
-    read -p "$(echo -e ${YELLOW}Enter Container Image URL [e.g., index.docker.io/username/image:tag]: ${RESET})" ContainerImage
+    # Display container image options
+    echo ""
+    echo -e "${YELLOW}Available Container Images:${RESET}"
+    ContainerImageOptions=("index.docker.io/stockdemo/demoapp:latest" "index.docker.io/bkimminich/juice-shop:latest" "index.docker.io/stockdemo/demobankapi:latest" "Enter your own")
+    for i in "${!ContainerImageOptions[@]}"; do
+        echo -e "[$((i + 1))] ${ContainerImageOptions[$i]}"
+    done
+
+    # Prompt user to select a container image
+    echo ""
+    read -p "$(echo -e ${YELLOW}Select a container image or enter your own [number]: ${RESET})" ContainerImageSelection
+
+    if [[ "$ContainerImageSelection" =~ ^[0-9]+$ && "$ContainerImageSelection" -ge 1 && "$ContainerImageSelection" -le "${#ContainerImageOptions[@]}" ]]; then
+        if [[ "$ContainerImageSelection" -eq "${#ContainerImageOptions[@]}" ]]; then
+            read -p "$(echo -e ${YELLOW}Enter your custom container image: ${RESET})" ContainerImage
+        else
+            ContainerImage="${ContainerImageOptions[$((ContainerImageSelection - 1))]}"
+        fi
+        echo -e "${YELLOW}Selected Container Image:${RESET} $ContainerImage"
+    else
+        echo -e "${YELLOW}Invalid selection. Please try again.${RESET}"
+        continue
+    fi
 
     # Prompt for tags
-    read -p "$(echo -e ${YELLOW}Enter Owner name: ${RESET})" OwnerName
-    OwnerName=${OwnerName:-<name>}  # Default to <name> if empty
-    read -p "$(echo -e ${YELLOW}Enter Email: ${RESET})" Email
+    echo ""
+    read -p "$(echo -e ${YELLOW}Enter your Email: ${RESET})" Email
     Email=${Email:-<email>}  # Default to <email> if empty
-    Tags=("owner=$OwnerName" "email=$Email")
+    Tags=("owner=$Email")
 
     # Display entered values for confirmation
     echo ""
@@ -166,41 +263,74 @@ while true; do
 
     # Ask for confirmation
     read -p "$(echo -e ${YELLOW}Are these values correct? [Y/N]: ${RESET})" Confirm
-
     if [[ "$Confirm" == "Y" || "$Confirm" == "y" ]]; then
         # Setting desired Azure Subscription
         az account set --subscription "$Subscription" && \
 
         # Create Resource Group
+        echo ""
+        echo "Creating Resource Group $ResourceGroupName..." && \
+
         az group create --name "$ResourceGroupName" \
                         --location "$Location" \
-                        --tags "${Tags[@]}" && \
+                        --tags "${Tags[@]}" &>/dev/null
 
-        echo "Resource Group $ResourceGroupName has been created." && \
+        if [ $? -eq 0 ]; then
+            echo "Resource Group $ResourceGroupName has been created."
+        else
+            echo "Error: Failed to create Resource Group $ResourceGroupName. Please check the provided parameters and try again."
+        fi
 
         # Create App Service Plan
+        echo ""
+        echo "Creating App Service Plan $AppServicePlanName..." && \
+
         az appservice plan create --name "$AppServicePlanName" \
                                   --resource-group "$ResourceGroupName" \
                                   --location "$Location" \
                                   --sku "$Sku" \
                                   --is-linux \
-                                  --tags "${Tags[@]}" && \
+                                  --tags "${Tags[@]}" &>/dev/null
 
-        echo "App Service Plan $AppServicePlanName has been created." && \
+        if [ $? -eq 0 ]; then
+            echo "App Service Plan $AppServicePlanName has been created." 
+                else
+            echo "Error: Failed to create App Service Plan $AppServicePlanName. Please check the provided parameters and try again."
+        fi
 
         # Create Web App
+        echo ""
+        echo "Creating Web App $WebAppName..." && \
+
         az webapp create --resource-group "$ResourceGroupName" \
                          --plan "$AppServicePlanName" \
                          --name "$WebAppName" \
                          --container-image-name "$ContainerImage" \
-                         --tags "${Tags[@]}" && \
+                         --tags "${Tags[@]}" &>/dev/null
 
-        echo "WebApp $WebAppName has been created."
+        if [ $? -eq 0 ]; then
+            echo "WebApp $WebAppName has been created."
+        else
+            echo "Error: Failed to create WebApp $WebAppName. Please check the provided parameters and try again."
+        fi
+
+        WebAppDetails=$(az webapp show --name "$WebAppName" --resource-group "$ResourceGroupName" 2>/dev/null)
+
+        if [[ -n "$WebAppDetails" ]]; then
+            echo -e "\nDetails for WebApp $WebAppName:"
+            echo "$WebAppDetails"
+            echo ""
+            echo -e "${YELLOW}Your website will take a few minutes to become available:${RESET} $WebAppName.azurewebsites.net"
+            echo ""
+        else
+            echo "Failed to retrieve details for WebApp $WebAppName."
+        fi
 
         # Exit the loop after successful execution
         break
     else
         echo -e "${YELLOW}Please re-enter the values.${RESET}"
+        echo ""
     fi
 done
 ```
