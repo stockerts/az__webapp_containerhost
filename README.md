@@ -497,7 +497,7 @@ else
     echo -e "${YELLOW}Operation cancelled by user.${RESET}"
 fi
 ```
-**_NOTE:_** Restriction group removal will error if group isn't present. No action is needed.
+**_NOTE:_** Restriction group removal will "Fail" if group isn't present. No action is needed.
 
 
 ---
