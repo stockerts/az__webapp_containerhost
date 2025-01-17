@@ -1,13 +1,21 @@
 ## Azure CLI - Code (Copy-Paste)
+
 ### 1. Open Azure CLI Cloud Shell in the Azure Portal
+
 1. Log in to [Azure Portal](https://portal.azure.com/).
+
 2. In the top-right corner of the portal, click on the **Cloud Shell** icon [`>`_].
+
 3. Choose **Bash** as your shell environment if prompted.
+
 4. The Cloud Shell will open at the bottom of your browser.
 
 ### 2. Run Web App Creation Code
+
 1. Copy the code block below.
+
 2. Paste it into the Cloud Shell.
+
 3. Press **Enter** to execute the script.
 
 ```bash
@@ -325,16 +333,22 @@ done
 ### 3. Verify Web App Creation
 
 1. In the Azure Portal, navigate to **Resource Groups**, select your **Resource Group**.
+
 2. Select your **App Service**.
+
 3. Within **Overview** click on the listed **Default domain** on the right side of the page to browse to the site.
 
-**_NOTE:_** This might take up to 5 mins, while the service becomes available for the first time.
+    **_NOTE:_** This might take up to 5 mins, while the service becomes available for the first time.
 
 ### 4. Run Web App Resitriction Code (Optional)
 Add IP ranges assosiated with F5 Distributed Cloud Regional Edges
+
 1. Copy the code block below.
+
 2. Paste it into the Cloud Shell.
+
 3. Press **Enter** to execute the script.
+
 
 
 
@@ -482,8 +496,13 @@ fi
 **_NOTE:_** You will receive "Failed to remove..." if no rule is present. Similar, you may receive "Failed to add..." if the App Service isn't ready.
 
 ### 2. Verify Restriction Creation
+
 1. In the Azure Portal, navigate to **Resource Groups**, select your **Resource Group**.
+
 2. Select your **App Service**.
+
 3. Click on **Networking** on the left hand side, under **Settings**.
+
 4. Click on **Enabled with access restrictions** next to **Public network access**.
-5. Verify groups have been added with the name **ipXC**.
+
+5. Verify rules have been added with the name **ipXC**.

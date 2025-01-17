@@ -17,7 +17,7 @@ Choose one of the following methods to set up and deploy your web application:
 
 Deploy a **Web App** using a guided step-by-step process in the Azure Portal.
 
-*Instructions coming soon...*
+For detailed instructions, see: [Azure Portal - Click-Ops](docs/az-portal.md)
 
 
 
