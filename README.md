@@ -3,26 +3,43 @@
 This repository provides resources and instructions for deploying a web application using Azure Web Apps with single-container hosting.
 
 ## Prerequisites
-- Access to [Azure Portal](https://portal.azure.com/).
-- Basic understanding of Azure resources.
 
-## Run Instructions
+Before you begin, ensure you have the following:
 
-To set up and deploy the web application, follow one of the methods below:
+- Access to the [Azure Portal](https://portal.azure.com/).
+- A basic understanding of Azure resources and services.
+
+## Setup and Deployment Instructions
+
+Choose one of the following methods to set up and deploy your web application:
 
 ### 1. Create via Click-Ops
 
-Coming soon...
+Deploy a **Web App** using a guided step-by-step process in the Azure Portal.
+
+*Instructions coming soon...*
+
+
 
 ### 2. Create via Code (Copy-Paste)
 
-Create a **Web App** by pasting code directly into the Azure CLI Cloud Shell, refer to [Run via Azure CLI - Code (Copy-Paste)](docs/az-cli-paste.md).
+Deploy a **Web App** by pasting code directly into the Azure CLI Cloud Shell.
+
+For detailed instructions, see: [Run via Azure CLI - Code (Copy-Paste)](docs/az-cli-paste.md)
+
+
 
 ### 3. Create via Script File
 
-Create a **Web App** using script files run from the Azure CLI Cloud Shell, see the [Run via Azure CLI - Script File](docs/az-cli-script.md).
+Deploy a **Web App** using prepared script files in the Azure CLI Cloud Shell.
+
+For detailed instructions, see: [Run via Azure CLI - Script File](docs/az-cli-script.md)
+
+
 
 ## Additional Resources
+
+For further information, refer to the following resources:
 
 - [Azure CLI Documentation](https://learn.microsoft.com/en-us/cli/azure/)
 - [Azure Web Apps Documentation](https://learn.microsoft.com/en-us/azure/app-service/)
