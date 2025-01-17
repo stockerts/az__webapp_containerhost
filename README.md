@@ -149,7 +149,7 @@ while true; do
     done
 
     if [[ "$ConfirmRsg" != "Y" && "$ConfirmRsg" != "y" ]]; then
-        read -p "$(echo -e ${YELLOW}Enter custom Resource Group name: ${RESET})" ResourceGroupName
+        read -p "$(echo -e ${YELLOW}Enter custom Resource Group name [e.g., yourname-appname-rsg]: ${RESET})" ResourceGroupName
     fi
 
     # App Service Plan Section
@@ -167,7 +167,7 @@ while true; do
     done
 
     if [[ "$ConfirmAsp" != "Y" && "$ConfirmAsp" != "y" ]]; then
-        read -p "$(echo -e ${YELLOW}Enter custom App Service Plan name: ${RESET})" AppServicePlanName
+        read -p "$(echo -e ${YELLOW}Enter custom App Service Plan name [e.g., yourname-appname-asp]: ${RESET})" AppServicePlanName
     fi
 
     # Display location options
@@ -197,6 +197,7 @@ while true; do
     # Display SKU options
     echo ""
     echo -e "${YELLOW}Available SKUs:${RESET}"
+    echo -e "${YELLOW}The SKU ${RESET}F1 (FREE) ${YELLOW}is recommended${RESET}"
     SkuOptions=("F1" "B1" "B2" "Enter your own")
     for i in "${!SkuOptions[@]}"; do
         echo -e "[$((i + 1))] ${SkuOptions[$i]}"
@@ -410,7 +411,7 @@ read -p "$(echo -e ${YELLOW}Enter the Resource Group Name [e.g., my-resource-gro
 
 # Prompt user for web app name
 echo ""
-read -p "$(echo -e ${YELLOW}Enter the Web App Name [e.g., my-web-app]: ${RESET})" WebAppName
+read -p "$(echo -e ${YELLOW}Enter the Web App Name [e.g., yourname-appname-app]: ${RESET})" WebAppName
 
 # Output the collected variables
 echo -e "\n${YELLOW}Collected Variables:${RESET}"
