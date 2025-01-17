@@ -33,6 +33,7 @@
 **_NOTE:_** This might take up to 5 mins, while the service becomes available for the first time.
 
 ### 4. Run Web App Resitriction Script File (Optional)
+Add IP ranges assosiated with F5 Distributed Cloud Regional Edges
 1. Update file permissions
 
     ```bash
@@ -43,6 +44,8 @@
     ```bash
     ./Az-WebApp-Restriction-Prompt.sh
     ```
+**_NOTE:_** You will receive "Failed to remove..." if no rule is present. Similar, you may receive "Failed to add..." if the App Service isn't ready.
+
 ### 2. Verify Restriction Creation
 1. In the Azure Portal, navigate to **Resource Groups**, select your **Resource Group**.
 2. Select your **App Service**.

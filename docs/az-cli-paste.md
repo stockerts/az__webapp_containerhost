@@ -334,7 +334,7 @@ done
 **_NOTE:_** This might take up to 5 mins, while the service becomes available for the first time.
 
 ### 4. Run Web App Resitriction Code (Optional)
-
+Add IP ranges assosiated with F5 Distributed Cloud Regional Edges
 1. Copy the code block below.
 2. Paste it into the Cloud Shell.
 3. Press **Enter** to execute the script.
@@ -482,7 +482,7 @@ else
     echo -e "${YELLOW}Operation cancelled by user.${RESET}"
 fi
 ```
-**_NOTE:_** Restriction group removal will "Fail" if group isn't present. No action is needed.
+**_NOTE:_** You will receive "Failed to remove..." if no rule is present. Similar, you may receive "Failed to add..." if the App Service isn't ready.
 
 ### 2. Verify Restriction Creation
 1. In the Azure Portal, navigate to **Resource Groups**, select your **Resource Group**.
