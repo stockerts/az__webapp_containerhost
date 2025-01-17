@@ -8,7 +8,7 @@ This guide will walk you through logging into Azure, opening Azure CLI, and runn
 
 ---
 
-## Steps - Azure Web Application
+## Steps - Azure Web App
 
 ### 1. Open Azure CLI Cloud Shell in the Azure Portal
 1. Log in to [Azure Portal](https://portal.azure.com/).
@@ -23,7 +23,7 @@ This guide will walk you through logging into Azure, opening Azure CLI, and runn
 
 ---
 
-### Code - Create or Update an Azure Web Application
+### Code - Create or Update an Azure Web App
 
 ```bash
 #!/bin/bash
@@ -355,7 +355,7 @@ After running the script, verify the resources:
 2. Paste it into the Cloud Shell.
 3. Press **Enter** to execute the script.
 
-### Code - Update Azure Web Application Network Restriction for F5 Distributed Cloud
+### Code - Update Azure Web App Network Restriction for F5 Distributed Cloud
 
 ```bash
 #!/bin/bash
