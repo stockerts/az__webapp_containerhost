@@ -1,6 +1,6 @@
 # Azure CLI Quick Start Guide
 
-This guide will walk you through logging into Azure, updating the Azure CLI, and running Bash commands to set up resources using the Azure CLI Cloud Shell within the Azure Portal.
+This guide will walk you through logging into Azure, opening Azure CLI, and running Bash scripts to set up resources using the Azure CLI Cloud Shell within the Azure Portal.
 
 ## Prerequisites
 - Access to [Azure Portal](https://portal.azure.com/).
