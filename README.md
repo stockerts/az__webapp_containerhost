@@ -1,4 +1,4 @@
-# Azure CLI Quick Start Guide
+# Azure Web App CLI Quick Start Guide
 
 This guide will walk you through logging into Azure, opening Azure CLI, and running Bash scripts to set up resources using the Azure CLI Cloud Shell within the Azure Portal.
 
