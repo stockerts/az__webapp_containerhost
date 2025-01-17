@@ -100,7 +100,7 @@
 
 3. Within **Overview** click on the listed **Default domain** on the right side of the page to browse to the site.
 
-### 2. Create Web App Restriction Rules (Optional)
+### 4. Create Web App Restriction Rules (Optional)
 
 1. In the Azure Portal, navigate to **Resource Groups**, select your **Resource Group**.
 
@@ -133,7 +133,7 @@
 
 7. Click **Save** near the top left of the page.
 
-### 2. Verify Restriction Creation
+### 5. Verify Restriction Creation
 
 1. In the Azure Portal, navigate to **Resource Groups**, select your **Resource Group**.
 

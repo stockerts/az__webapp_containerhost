@@ -54,7 +54,7 @@ Add IP ranges assosiated with F5 Distributed Cloud Regional Edges
     ```
 **_NOTE:_** You will receive "Failed to remove..." if no rule is present. Similar, you may receive "Failed to add..." if the App Service isn't ready.
 
-### 2. Web App Restriction Rule Creation
+### 5. Web App Restriction Rule Creation
 
 1. In the Azure Portal, navigate to **Resource Groups**, select your **Resource Group**.
 
