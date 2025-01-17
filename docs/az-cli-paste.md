@@ -10,8 +10,6 @@
 2. Paste it into the Cloud Shell.
 3. Press **Enter** to execute the script.
 
----
-
 ```bash
 #!/bin/bash
 
@@ -323,7 +321,6 @@ while true; do
 done
 ```
 
----
 
 ### 3. Verify Web App Creation
 
@@ -339,7 +336,7 @@ Add IP ranges assosiated with F5 Distributed Cloud Regional Edges
 2. Paste it into the Cloud Shell.
 3. Press **Enter** to execute the script.
 
----
+
 
 ```bash
 #!/bin/bash
