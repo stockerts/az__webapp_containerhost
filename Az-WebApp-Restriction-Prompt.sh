@@ -47,7 +47,7 @@ done
 
 # Prompt user for resource group name
 echo ""
-read -p "$(echo -e ${YELLOW}Enter the Resource Group Name [e.g., my-resource-group]: ${RESET})" ResourceGroupName
+read -p "$(echo -e ${YELLOW}Enter the Resource Group Name [e.g., yourname-appname-rsg]: ${RESET})" ResourceGroupName
 
 # Prompt user for web app name
 echo ""
