@@ -1,4 +1,4 @@
-## Azure CLI - Script Code (Copy-Paste)
+## Azure CLI - Code (Copy-Paste)
 ### 1. Open Azure CLI Cloud Shell in the Azure Portal
 1. Log in to [Azure Portal](https://portal.azure.com/).
 2. In the top-right corner of the portal, click on the **Cloud Shell** icon [`>`_].
