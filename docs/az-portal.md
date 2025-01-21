@@ -19,88 +19,89 @@
 
 1. **Basics**
 
-    1. **Select Subscription**  
-        - Choose the desired **Subscription** if you have more than one.
+    **Select Subscription**  
+    Choose the desired **Subscription** if you have more than one.
 
-    2. **Set Resource Group**  
-        - Select an existing **Resource Group** or create a new one.  
-            *(Example)*: `yourname-appname-rsg`
+    **Set Resource Group**  
+    Select an existing **Resource Group** or create a new one.  
+    *(Example)*: `yourname-appname-rsg`
 
-    3. **Update App Name**  
-        - Set the **Name** field, ensuring it’s unique across all Azure subscriptions.  
-            *(Example)*: `yourname-appname-app`
+    **Update App Name**  
+    Set the **Name** field, ensuring it’s unique across all Azure subscriptions.  
+    *(Example)*: `yourname-appname-app`
 
-    4. **Select Publish Method**  
-        - Choose **Container** as the Publish method.
+    **Select Publish Method**  
+    Choose **Container** as the Publish method.
 
-    5. **Choose Operating System**  
-        - *(Recommended)* Select **Linux**.
+    **Choose Operating System**  
+    *(Recommended)* Select **Linux**.
 
-    6. **Select Region**  
-        - Choose a **Region** to deploy Azure resources. *(Note: Not all regions support all SKUs.)*
+    **Select Region**  
+    Choose a **Region** to deploy Azure resources. *(Note: Not all regions support all SKUs.)*
 
-    7. **Create App Service Plan**  
-        - Select **Create New** and name it appropriately.  
-        *(Example)*: `yourname-appname-asp`
+    **Create App Service Plan**  
+    Select **Create New** and name it appropriately.  
+    *(Example)*: `yourname-appname-asp`
 
-    8. **Choose Pricing Plan**  
-        - Select a Pricing Plan from the dropdown.  
-            *(Recommended)*:  
-            - **F1** - Free (60 mins/day)  
-            - **B1** - ~$11/month  
-            - **B2** - ~$22/month  
-            - To explore more options, click **Explore pricing plans**.
+    **Choose Pricing Plan**  
+    Select a Pricing Plan from the dropdown.  
+    *(Recommended)*:  
+    - **F1** - Free (60 mins/day)  
+    - **B1** - ~$11/month  
+    - **B2** - ~$22/month  
+    To explore more options, click **Explore pricing plans**.
     
-    9. **Navigate to Container Options**  
-        - Click **Next: Container >** at the bottom of the page.
+    **Navigate to Container Options**  
+    Click **Next: Container >** at the bottom of the page.
 
 2. **Deployment**  
 
-    1. **Configure Image Source**  
-        - Select **Other container registries** as the **Image Source**.
+    **Configure Image Source**  
+    Select **Other container registries** as the **Image Source**.
 
-    2. **Set Docker Hub Options**  
-        - Configure the following settings under Docker Hub:  
-        - **Access Type**: Public  
-        - **Registry Server URL**: `https://index.docker.io` (default)  
-        - **Image and Tag**: Specify the desired container image.  
-            *(Examples)*:  
-            - `stockdemo/demoapp:latest`  
-            - `bkimminich/juice-shop:latest`
-            - `stockdemo/demobankapi:latest`
+    **Set Docker Hub Options**  
+    Configure the following settings under Docker Hub:  
+    - **Access Type**: Public  
+    - **Registry Server URL**: `https://index.docker.io` (default)  
+    - **Image and Tag**: Specify the desired container image.  
+    *(Examples)*:  
+        - `stockdemo/demoapp:latest`  
+        - `bkimminich/juice-shop:latest`
+        - `stockdemo/demobankapi:latest`
 
-    3. **Navigate to Network Options**  
-        - Click **Next: Networking >** at the bottom of the page.
+    **Navigate to Network Options**  
+    Click **Next: Networking >** at the bottom of the page.
 
 3. **Networking**
 
-    1. **Choose an Access Type**
-        - Check **On** for Enabled public access
+    **Choose an Access Type**
+    Check **On** for Enabled public access
 
-    2. **Navigate to Monitoring Options**  
-        - Click **Next: Monitor & Secure >** at the bottom of the page.
+    **Navigate to Monitoring Options**  
+    Click **Next: Monitor & Secure >** at the bottom of the page.
+
 4. **Monitor + Secure**
 
-    1. **Monitoring Selection**
-        - Keep default selection, Enable Application Insight **No**.
+    **Monitoring Selection**
+    Keep default selection, Enable Application Insight **No**.
 
-    2. **Navigate to Tags Options**  
-        - Click **Next: Tags >** at the bottom of the page.
+    **Navigate to Tags Options**  
+    Click **Next: Tags >** at the bottom of the page.
 
 5. **Tags**
 
-    1. **Add a tag**
-        - Update the following fields
-            - **Name**: owner
-            - **Value**: youremail
+    **Add a tag**
+    Update the following fields
+        - **Name**: owner
+        - **Value**: youremail
 
-    2. **Navigate to Review & Create**  
-        - Click **Next: Review + create >** at the bottom of the page.
+    **Navigate to Review & Create**  
+    Click **Next: Review + create >** at the bottom of the page.
 
 22. **Review + create**
 
-    1. **Create the Web App**  
-        - Click **Create** at the bottom of the page.
+    **Create the Web App**  
+    Click **Create** at the bottom of the page.
 
 ### 4. Verify Web App Creation
 
