@@ -45,11 +45,11 @@
 
     8. **Choose Pricing Plan**  
         - Select a Pricing Plan from the dropdown.  
-        *(Recommended)*:  
-        - **F1** - Free (60 mins/day)  
-        - **B1** - ~$11/month  
-        - **B2** - ~$22/month  
-        - To explore more options, click **Explore pricing plans**.
+            *(Recommended)*:  
+            - **F1** - Free (60 mins/day)  
+            - **B1** - ~$11/month  
+            - **B2** - ~$22/month  
+            - To explore more options, click **Explore pricing plans**.
     
     9. **Navigate to Container Options**  
         - Click **Next: Container >** at the bottom of the page.
