@@ -3,7 +3,7 @@
 ### 1. Azure Portal
 1. Log in to [Azure Portal](https://portal.azure.com/).
 
-### 2. Web App Creation Steps
+### 2. Azure Marketplace
 
 1. **Create a Resource**  
    - Navigate to the **Azure services** bar and click **Create a resource**.
@@ -15,84 +15,94 @@
 3. **Create Web App**  
    - On the Web App Marketplace page, click **Create**.
 
-4. **Select Subscription**  
-   - Choose the desired **Subscription** if you have more than one.
+### 3. Create a Web App
 
-5. **Set Resource Group**  
-   - Select an existing **Resource Group** or create a new one.  
-     *(Example)*: `yourname-appname-rsg`
+1. **Basics**
 
-6. **Update App Name**  
-   - Set the **Name** field, ensuring it’s unique across all Azure subscriptions.  
-     *(Example)*: `yourname-appname-app`
+    1. **Select Subscription**  
+        - Choose the desired **Subscription** if you have more than one.
 
-7. **Select Publish Method**  
-   - Choose **Container** as the Publish method.
+    2. **Set Resource Group**  
+        - Select an existing **Resource Group** or create a new one.  
+            *(Example)*: `yourname-appname-rsg`
 
-8. **Choose Operating System**  
-   - *(Recommended)* Select **Linux**.
+    3. **Update App Name**  
+        - Set the **Name** field, ensuring it’s unique across all Azure subscriptions.  
+            *(Example)*: `yourname-appname-app`
 
-9. **Select Region**  
-   - Choose a **Region** to deploy Azure resources. *(Note: Not all regions support all SKUs.)*
+    4. **Select Publish Method**  
+        - Choose **Container** as the Publish method.
 
-10. **Create App Service Plan**  
-    - Select **Create New** and name it appropriately.  
-      *(Example)*: `yourname-appname-asp`
+    5. **Choose Operating System**  
+        - *(Recommended)* Select **Linux**.
 
-11. **Choose Pricing Plan**  
-    - Select a Pricing Plan from the dropdown.  
-      *(Recommended)*:  
-      - **F1** - Free (60 mins/day)  
-      - **B1** - ~$11/month  
-      - **B2** - ~$22/month  
-    - To explore more options, click **Explore pricing plans**.
+    6. **Select Region**  
+        - Choose a **Region** to deploy Azure resources. *(Note: Not all regions support all SKUs.)*
 
-12. **Navigate to Container Options**  
-    - Click **Next: Container >** at the bottom of the page.
+    7. **Create App Service Plan**  
+        - Select **Create New** and name it appropriately.  
+        *(Example)*: `yourname-appname-asp`
 
-13. **Configure Image Source**  
-    - Select **Other container registries** as the **Image Source**.
+    8. **Choose Pricing Plan**  
+        - Select a Pricing Plan from the dropdown.  
+        *(Recommended)*:  
+        - **F1** - Free (60 mins/day)  
+        - **B1** - ~$11/month  
+        - **B2** - ~$22/month  
+        - To explore more options, click **Explore pricing plans**.
+    
+    9. **Navigate to Container Options**  
+        - Click **Next: Container >** at the bottom of the page.
 
-14. **Set Docker Hub Options**  
-    - Configure the following settings under Docker Hub:  
-      - **Access Type**: Public  
-      - **Registry Server URL**: `https://index.docker.io` (default)  
-      - **Image and Tag**: Specify the desired container image.  
-        *(Examples)*:  
-        - `stockdemo/demoapp:latest`  
-        - `bkimminich/juice-shop:latest`
-        - `stockdemo/demobankapi:latest`
+2. **Deployment**  
 
-15. **Navigate to Network Options**  
-    - Click **Next: Networking >** at the bottom of the page.
+    1. **Configure Image Source**  
+        - Select **Other container registries** as the **Image Source**.
 
-16. **Choose an Access Type**
-    - Check **On** for Enabled public access
+    2. **Set Docker Hub Options**  
+        - Configure the following settings under Docker Hub:  
+        - **Access Type**: Public  
+        - **Registry Server URL**: `https://index.docker.io` (default)  
+        - **Image and Tag**: Specify the desired container image.  
+            *(Examples)*:  
+            - `stockdemo/demoapp:latest`  
+            - `bkimminich/juice-shop:latest`
+            - `stockdemo/demobankapi:latest`
 
-17. **Navigate to Monitoring Options**  
-    - Click **Next: Monitor & Secure >** at the bottom of the page.
+    3. **Navigate to Network Options**  
+        - Click **Next: Networking >** at the bottom of the page.
 
-18. **Monitoring Selection**
-    - Keep default selection, Enable Application Insight **No**.
+3. **Networking**
 
-19. **Navigate to Tags Options**  
-    - Click **Next: Tags >** at the bottom of the page.
+    1. **Choose an Access Type**
+        - Check **On** for Enabled public access
 
-20. **Add a tag**
-    - Update the following fields
-        - **Name**: owner
-        - **Value**: youremail
+    2. **Navigate to Monitoring Options**  
+        - Click **Next: Monitor & Secure >** at the bottom of the page.
+4. **Monitor + Secure**
 
-21. **Navigate to Review & Create**  
-    - Click **Next: Review + create >** at the bottom of the page.
+    1. **Monitoring Selection**
+        - Keep default selection, Enable Application Insight **No**.
 
-22. **Navigate to Review & Create**  
-    - Click **Next: Review + create >** at the bottom of the page.
+    2. **Navigate to Tags Options**  
+        - Click **Next: Tags >** at the bottom of the page.
 
-23. **Create the Web App**  
-    - Click **Create** at the bottom of the page.
+5. **Tags**
 
-### 3. Verify Web App Creation
+    1. **Add a tag**
+        - Update the following fields
+            - **Name**: owner
+            - **Value**: youremail
+
+    2. **Navigate to Review & Create**  
+        - Click **Next: Review + create >** at the bottom of the page.
+
+22. **Review + create**
+
+    1. **Create the Web App**  
+        - Click **Create** at the bottom of the page.
+
+### 4. Verify Web App Creation
 
 1. In the Azure Portal, navigate to **Resource Groups**, select your **Resource Group**.
 
@@ -100,7 +110,7 @@
 
 3. Within **Overview** click on the listed **Default domain** on the right side of the page to browse to the site.
 
-### 4. Create Web App Restriction Rules (Optional)
+### 5. Create Web App Restriction Rules (Optional)
 
 1. In the Azure Portal, navigate to **Resource Groups**, select your **Resource Group**.
 
@@ -133,7 +143,7 @@
 
 7. Click **Save** near the top left of the page.
 
-### 5. Verify Restriction Creation
+### 6. Verify Restriction Creation
 
 1. In the Azure Portal, navigate to **Resource Groups**, select your **Resource Group**.
 
